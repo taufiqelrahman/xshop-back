@@ -17,10 +17,14 @@ class UserController extends Controller
 	    $id=$currentUser->id;
 	    $name=$currentUser->name;
 	    $email=$currentUser->email;
+	    $address=$currentUser->address;
+	    $phone=$currentUser->phone;
 	    return response()->json([
     		"id" => $id,
     		"name" => $name,
-    		"email" => $email
+    		"email" => $email,
+			"address" => $address,
+			"phone" => $phone
     	]);
 }
 }

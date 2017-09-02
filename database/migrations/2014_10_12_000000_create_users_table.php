@@ -20,6 +20,9 @@ class CreateUsersTable extends Migration
             $table->text('address')->nullable();
             $table->string('password');
             $table->integer('admin');
+            $table->integer('phone');
+            $table->text('address');
+            $table->boolean('admin');
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

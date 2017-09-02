@@ -18,6 +18,12 @@ class CreateOrdersTable extends Migration
           $table->increments('id');
           $table->integer('member_id');
           $table->integer('orderstatus_id');
+          $table->string('name');
+          $table->integer('phone');
+          $table->text('address');
+          $table->string('payment');
+          $table->string('expedition');
+          $table->integer('total');
           $table->timestamps();
           $table->softDeletes();
         });
