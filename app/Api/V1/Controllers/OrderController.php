@@ -2,7 +2,10 @@
 
 namespace App\Api\V1\Controllers;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use JWTAuth;
+use App\Order;
 
 class OrderController extends Controller
 {
@@ -13,7 +16,14 @@ class OrderController extends Controller
      */
     public function index()
     {
-        //
+        $currentUser = JWTAuth::parseToken()->authenticate();
+        $id=$currentUser->id;
+
+        $items = Order::with('orderItems')->with('orderStatus')->where('member_id', $id)->get();
+        return response()->json([
+    		"acknowledge" => 1,
+    		"items" => $items
+    	]);
     }
 
     /**
@@ -23,7 +33,35 @@ class OrderController extends Controller
      */
     public function create()
     {
-        //
+        // learn how to throw error
+        // fix create API
+        $this->validate($request, [
+            'orderstatus_id' => 'required',
+            'name' => 'required',
+            'phone' => 'required',
+            'address' => 'required',
+            'payment' => 'required',
+            'expedition' => 'required',
+            'total' => 'required'
+        ]);
+
+        $currentUser = JWTAuth::parseToken()->authenticate();
+        $id=$currentUser->id;
+        
+        $input['member_id'] = $id;
+        $input['orderstatus_id'] = $request->orderstatus_id;
+        $input['name'] = $request->name;
+        $input['phone'] = $request->phone;
+        $input['address'] = $request->address;
+        $input['payment'] = $request->payment;
+        $input['expedition'] = $request->expedition;
+        $input['total'] = $request->total;
+        order::create($input);
+        
+        return response()->json([
+    		"acknowledge" => 1,
+    		"message" => 'This order has been successfully processed'
+    	]);
     }
 
     /**

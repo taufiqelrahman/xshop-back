@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 
 Class OrderStatus extends Model {
 
-  protected $table = 'orders';
+  protected $table = 'orderstatus';
   protected $dates = ['deleted_at'];
 
   protected $fillable = array('name');

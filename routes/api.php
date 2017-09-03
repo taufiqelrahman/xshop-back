@@ -51,6 +51,7 @@ $api->version('v1', function (Router $api) {
         $api->post('cart/postLogin', 'App\Api\V1\Controllers\CartController@moveItems');
         $api->post('cart/update', 'App\Api\V1\Controllers\CartController@updateItems');
         $api->resource('cart', 'App\Api\V1\Controllers\CartController');
+        $api->resource('order', 'App\Api\V1\Controllers\OrderController');
     });
     $api->get('products', 'App\Api\V1\Controllers\ProductsController@index');
 });
