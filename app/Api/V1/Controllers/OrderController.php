@@ -33,35 +33,7 @@ class OrderController extends Controller
      */
     public function create()
     {
-        // learn how to throw error
-        // fix create API
-        $this->validate($request, [
-            'orderstatus_id' => 'required',
-            'name' => 'required',
-            'phone' => 'required',
-            'address' => 'required',
-            'payment' => 'required',
-            'expedition' => 'required',
-            'total' => 'required'
-        ]);
-
-        $currentUser = JWTAuth::parseToken()->authenticate();
-        $id=$currentUser->id;
-        
-        $input['member_id'] = $id;
-        $input['orderstatus_id'] = $request->orderstatus_id;
-        $input['name'] = $request->name;
-        $input['phone'] = $request->phone;
-        $input['address'] = $request->address;
-        $input['payment'] = $request->payment;
-        $input['expedition'] = $request->expedition;
-        $input['total'] = $request->total;
-        order::create($input);
-        
-        return response()->json([
-    		"acknowledge" => 1,
-    		"message" => 'This order has been successfully processed'
-    	]);
+        //
     }
 
     /**
@@ -72,7 +44,41 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'orderstatus_id' => 'required',
+            'name' => 'required',
+            'phone' => 'required',
+            'address' => 'required',
+            'payment' => 'required',
+            'expedition' => 'required',
+            'total' => 'required',
+            'items' => 'required'
+        ]);
+
+        $currentUser = JWTAuth::parseToken()->authenticate();
+        $id=$currentUser->id;
+
+        $order = new order();
+        $order['member_id'] = $id;
+        $order['orderstatus_id'] = $request->orderstatus_id;
+        $order['name'] = $request->name;
+        $order['phone'] = $request->phone;
+        $order['address'] = $request->address;
+        $order['payment'] = $request->payment;
+        $order['expedition'] = $request->expedition;
+        $order['total'] = $request->total;
+        $order->save();
+
+        foreach ($request->items as $item) {
+            $product['product_id'] = $item->id;
+            $product['amount'] = $item->amount;
+            $order->orderItems()->attach($item);
+        }
+
+        return response()->json([
+            "acknowledge" => 1,
+            "message" => 'This order has been successfully processed'
+        ]);
     }
 
     /**
