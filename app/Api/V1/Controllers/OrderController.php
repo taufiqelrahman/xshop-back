@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use JWTAuth;
 use App\Order;
+use App\Product;
+use DB;
 
 class OrderController extends Controller
 {
@@ -66,13 +68,17 @@ class OrderController extends Controller
         $order['address'] = $request->address;
         $order['payment'] = $request->payment;
         $order['expedition'] = $request->expedition;
-        $order['total'] = $request->total;
+        $total = $request->total + rand(1,99);
+        $order['total'] = $total;
         $order->save();
 
         foreach ($request->items as $item) {
-            $product['product_id'] = $item->id;
-            $product['amount'] = $item->amount;
-            $order->orderItems()->attach($item);
+            $order->orderItems()->attach($item['id'], 
+                [
+                    'amount' => $item['amount'],
+                    'created_at' => DB::raw('now()')
+                ]
+            );
         }
 
         return response()->json([
