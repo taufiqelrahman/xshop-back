@@ -83,7 +83,8 @@ class OrderController extends Controller
 
         return response()->json([
             "acknowledge" => 1,
-            "message" => 'This order has been successfully processed'
+            "message" => 'This order has been successfully processed',
+            "total" => $total
         ]);
     }
 
@@ -138,7 +139,7 @@ class OrderController extends Controller
         //
     }
 
-    // bulk: update items in cart
+    // bulk: update orders
     public function updateItems(Request $request) {           
         $currentUser = JWTAuth::parseToken()->authenticate();
         $id=$currentUser->id;

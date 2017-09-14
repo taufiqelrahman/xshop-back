@@ -11,20 +11,21 @@ use Dingo\Api\Routing\Helpers;
 class UserController extends Controller
 {
 	use Helpers;
-    public function getCurrentUser()
+	public function getCurrentUser()
 	{
-		$currentUser = JWTAuth::parseToken()->authenticate();
+			$currentUser = JWTAuth::parseToken()->authenticate();
 	    $id=$currentUser->id;
 	    $name=$currentUser->name;
 	    $email=$currentUser->email;
 	    $address=$currentUser->address;
 	    $phone=$currentUser->phone;
-	    return response()->json([
+	    
+			return response()->json([
     		"id" => $id,
     		"name" => $name,
     		"email" => $email,
-			"address" => $address,
-			"phone" => $phone
+				"address" => $address,
+				"phone" => $phone
     	]);
-}
+	}
 }
