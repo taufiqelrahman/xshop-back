@@ -95,7 +95,13 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        //
+        $currentUser = JWTAuth::parseToken()->authenticate();
+
+        $item = Order::with('orderItems')->with('orderStatus')->where('id', $id)->get();
+        return response()->json([
+            "acknowledge" => 1,
+            "item" => $item
+        ]);
     }
 
     /**
@@ -130,5 +136,22 @@ class OrderController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    // bulk: update items in cart
+    public function updateItems(Request $request) {           
+        $currentUser = JWTAuth::parseToken()->authenticate();
+        $id=$currentUser->id;
+        $items = json_decode($request->items);
+        foreach($items as $item) {
+            DB::table('orders')
+                ->where('id', $item->order_id)
+                ->update(['orderstatus_id' => $item->orderstatus_id]);
+        }
+
+        return response()->json([
+    		"acknowledge" => 1,
+    		"message" => 'These orders has been processed.'
+    	]);
     }
 }
